@@ -15,6 +15,7 @@
   --font-mono: "Geist Mono Variable", ui-monospace, monospace;
   --color-battlify-green: var(--battlify-green);
   --color-battlify-orange: var(--battlify-orange);
+  --color-battlify-glow: var(--battlify-glow);
   --color-battlify-surface: var(--battlify-surface);
   --color-battlify-muted: var(--battlify-muted);
   --color-battlify-muted-foreground: var(--battlify-muted-foreground);
@@ -57,89 +58,113 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Theme-aware elevation, resolved per-theme via the vars below. */
+  --shadow-soft: var(--sh-soft);
+  --shadow-elevated: var(--sh-elevated);
+  --shadow-window: var(--sh-window);
 }
 
+/* ==========================================================================
+   Battlify design system — vivid blue accent (SQL Studio-inspired), light +
+   dark. `:root` is the light theme; `.dark` overrides to near-black. Blue is
+   the interactive accent; green/orange are reserved for battery *status* only.
+   Style through tokens so both themes stay in sync.
+   ========================================================================== */
 :root {
-  --battlify-green: oklch(0.82 0.15 158);
-  --battlify-orange: oklch(0.79 0.15 68);
-  --battlify-glow: oklch(0.62 0.13 158 / 32%);
-  --battlify-surface: oklch(0.205 0.012 80);
-  --battlify-muted: oklch(0.27 0.012 80);
-  --battlify-muted-foreground: oklch(0.72 0.015 80);
-  --battlify-border: oklch(1 0.02 90 / 11%);
-  --background: oklch(0.145 0.008 80);
-  --foreground: oklch(0.96 0.006 80);
-  --card: oklch(0.18 0.02 260);
-  --card-foreground: oklch(0.97 0.01 260);
-  --popover: oklch(0.18 0.02 260);
-  --popover-foreground: oklch(0.97 0.01 260);
-  --primary: oklch(0.82 0.15 158);
-  --primary-foreground: oklch(0.16 0.02 80);
-  --secondary: oklch(0.22 0.02 260);
-  --secondary-foreground: oklch(0.97 0.01 260);
-  --muted: oklch(0.22 0.02 260);
-  --muted-foreground: oklch(0.72 0.02 260);
-  --accent: oklch(0.22 0.02 260);
-  --accent-foreground: oklch(0.97 0.01 260);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.55 0.1 145);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Status colors — battery health, never used for generic UI accents. */
+  --battlify-green: oklch(0.58 0.15 152); /* holding / charged */
+  --battlify-orange: oklch(0.66 0.16 55); /* charging */
+  --battlify-glow: oklch(0.55 0.22 256 / 16%); /* soft blue hero glow */
+  --battlify-surface: oklch(0.97 0.003 264);
+  --battlify-muted: oklch(0.95 0.004 264);
+  --battlify-muted-foreground: oklch(0.5 0.015 264);
+  --battlify-border: oklch(0 0 0 / 8%);
+
+  --background: oklch(0.985 0.002 264); /* soft off-white */
+  --foreground: oklch(0.21 0.01 264);
+  --card: oklch(1 0 0); /* white panel, elevated over the off-white ground */
+  --card-foreground: oklch(0.21 0.01 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.01 264);
+  --primary: oklch(0.55 0.22 256); /* blue #2563eb-ish, deep enough on white */
+  --primary-foreground: oklch(0.99 0.005 256);
+  --secondary: oklch(0.96 0.004 264);
+  --secondary-foreground: oklch(0.24 0.01 264);
+  --muted: oklch(0.96 0.004 264);
+  --muted-foreground: oklch(0.5 0.015 264);
+  --accent: oklch(0.95 0.015 256); /* subtle blue-tinted hover */
+  --accent-foreground: oklch(0.24 0.01 264);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0 0 0 / 9%);
+  --input: oklch(0 0 0 / 12%);
+  --ring: oklch(0.55 0.22 256);
+  --chart-1: oklch(0.55 0.22 256);
+  --chart-2: oklch(0.6 0.15 232);
+  --chart-3: oklch(0.65 0.14 195);
+  --chart-4: oklch(0.58 0.15 152);
+  --chart-5: oklch(0.66 0.16 55);
+  --radius: 0.75rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.21 0.01 264);
+  --sidebar-primary: oklch(0.55 0.22 256);
+  --sidebar-primary-foreground: oklch(0.99 0.005 256);
+  --sidebar-accent: oklch(0.95 0.015 256);
+  --sidebar-accent-foreground: oklch(0.24 0.01 264);
+  --sidebar-border: oklch(0 0 0 / 9%);
+  --sidebar-ring: oklch(0.55 0.22 256);
+
+  /* Elevation — soft ambient stack for panels, deeper for the app window. */
+  --sh-soft: 0 1px 2px oklch(0 0 0 / 4%), 0 4px 12px -4px oklch(0 0 0 / 6%);
+  --sh-elevated: 0 2px 4px oklch(0 0 0 / 4%), 0 18px 44px -16px oklch(0 0 0 / 12%);
+  --sh-window: 0 2px 6px oklch(0 0 0 / 6%), 0 30px 60px -24px oklch(0 0 0 / 20%);
 }
 
+/* Dark theme — near-pure black + vivid blue. */
 .dark {
-  --battlify-green: oklch(0.82 0.15 158);
+  --battlify-green: oklch(0.8 0.16 155);
   --battlify-orange: oklch(0.79 0.15 68);
-  --battlify-glow: oklch(0.62 0.13 158 / 32%);
-  --battlify-surface: oklch(0.205 0.012 80);
-  --battlify-muted: oklch(0.27 0.012 80);
-  --battlify-muted-foreground: oklch(0.72 0.015 80);
-  --battlify-border: oklch(1 0.02 90 / 11%);
-  --background: oklch(0.145 0.008 80);
-  --foreground: oklch(0.96 0.006 80);
-  --card: oklch(0.2 0.01 80);
-  --card-foreground: oklch(0.96 0.006 80);
-  --popover: oklch(0.2 0.01 80);
-  --popover-foreground: oklch(0.96 0.006 80);
-  --primary: oklch(0.82 0.15 158);
-  --primary-foreground: oklch(0.16 0.02 80);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.62 0.11 158);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --battlify-glow: oklch(0.62 0.2 256 / 32%);
+  --battlify-surface: oklch(0.205 0.006 264);
+  --battlify-muted: oklch(0.27 0.006 264);
+  --battlify-muted-foreground: oklch(0.68 0.012 264);
+  --battlify-border: oklch(1 0 0 / 9%);
+
+  --background: oklch(0.115 0.003 264);
+  --foreground: oklch(0.97 0.004 264);
+  --card: oklch(0.168 0.004 264);
+  --card-foreground: oklch(0.97 0.004 264);
+  --popover: oklch(0.168 0.004 264);
+  --popover-foreground: oklch(0.97 0.004 264);
+  --primary: oklch(0.62 0.2 256);
+  --primary-foreground: oklch(0.98 0.01 256);
+  --secondary: oklch(0.235 0.006 264);
+  --secondary-foreground: oklch(0.97 0.004 264);
+  --muted: oklch(0.235 0.006 264);
+  --muted-foreground: oklch(0.68 0.012 264);
+  --accent: oklch(0.27 0.02 256);
+  --accent-foreground: oklch(0.97 0.004 264);
+  --destructive: oklch(0.62 0.21 25);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.62 0.2 256);
+  --chart-1: oklch(0.62 0.2 256);
+  --chart-2: oklch(0.7 0.15 232);
+  --chart-3: oklch(0.75 0.14 195);
+  --chart-4: oklch(0.8 0.16 155);
+  --chart-5: oklch(0.79 0.15 68);
+  --sidebar: oklch(0.185 0.005 264);
+  --sidebar-foreground: oklch(0.97 0.004 264);
+  --sidebar-primary: oklch(0.62 0.2 256);
+  --sidebar-primary-foreground: oklch(0.98 0.01 256);
+  --sidebar-accent: oklch(0.27 0.02 256);
+  --sidebar-accent-foreground: oklch(0.97 0.004 264);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.62 0.2 256);
+
+  /* On near-black, shadows read as depth only when they go darker + wider. */
+  --sh-soft: 0 1px 2px oklch(0 0 0 / 30%), 0 4px 12px -4px oklch(0 0 0 / 40%);
+  --sh-elevated: 0 2px 4px oklch(0 0 0 / 40%), 0 22px 52px -18px oklch(0 0 0 / 66%);
+  --sh-window: 0 2px 8px oklch(0 0 0 / 50%), 0 40px 80px -28px oklch(0 0 0 / 80%);
 }
 
 @layer base {
@@ -158,6 +183,55 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* ==========================================================================
+   Landing motion — CSS-only, SSR-safe. `.animate-enter` plays a staggered
+   fade-up on load (hero content, so it never depends on JS being ready).
+   `.reveal` fades a section in as it scrolls into view via a scroll-driven
+   timeline where supported, and stays fully visible everywhere else. Both
+   respect prefers-reduced-motion.
+   ========================================================================== */
+@keyframes blfEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.animate-enter {
+  animation: blfEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+@keyframes blfReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      opacity: 0;
+      animation: blfReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 6% cover 28%;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-enter {
+    animation: none;
   }
 }
 
@@ -1738,4 +1812,251 @@
   font-size: 18px;
   color: var(--ink);
   margin-top: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   LEGAL / INFO PAGES (terms, privacy, changelog)
+   Reuses the .blf light-paper scope; header stays solid.
+   ───────────────────────────────────────────────────────── */
+.blf .legal-header {
+  background: rgba(247, 247, 243, 0.82);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.blf .legal-header .buy.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.blf .legal-header .buy.legal-back svg {
+  width: 15px;
+  height: 15px;
+}
+
+.blf .legal {
+  padding: 122px 0 96px;
+  min-height: 100vh;
+}
+.blf .legal .wrap {
+  max-width: 780px;
+}
+.blf .legal-head {
+  padding-bottom: 30px;
+  margin-bottom: 34px;
+  border-bottom: 1px solid var(--line);
+}
+.blf .legal-head h1 {
+  font-size: clamp(34px, 5vw, 54px);
+  margin-top: 16px;
+}
+.blf .legal-updated {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dim);
+  font-family: var(--mono);
+}
+.blf .legal-intro {
+  margin-top: 18px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+.blf .legal-section {
+  margin-top: 40px;
+}
+.blf .legal-section:first-child {
+  margin-top: 0;
+}
+.blf .legal-section h2 {
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.15;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+.blf .legal-num {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: 0;
+}
+.blf .legal-prose p,
+.blf .legal-intro p {
+  margin: 0 0 14px;
+}
+.blf .legal-prose p:last-child {
+  margin-bottom: 0;
+}
+.blf .legal-prose,
+.blf .legal-intro {
+  font-size: 16.5px;
+  line-height: 1.68;
+  color: var(--ink-2);
+}
+.blf .legal-prose b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.blf .legal-prose a,
+.blf .legal-intro a {
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(18, 152, 74, 0.32);
+}
+.blf .legal-prose a:hover {
+  border-bottom-color: var(--green);
+}
+.blf .legal-prose ul {
+  margin: 4px 0 16px;
+  padding-left: 22px;
+  display: grid;
+  gap: 8px;
+}
+.blf .legal-prose li {
+  padding-left: 4px;
+}
+.blf .legal-prose li::marker {
+  color: var(--green-bright);
+}
+
+/* changelog specifics */
+.blf .cl-current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 26px 28px;
+  border-radius: 20px;
+  background: var(--green-soft);
+  border: 1px solid rgba(18, 152, 74, 0.18);
+  margin-bottom: 12px;
+}
+.blf .cl-current p {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+.blf .cl-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green);
+}
+.blf .cl-version {
+  font-family: var(--disp);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-size: 40px;
+  line-height: 1;
+  margin: 8px 0 0;
+  color: var(--ink);
+}
+.blf .cl-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.blf .cl-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+}
+.blf .cl-card h3 {
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: 17px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+.blf .cl-card p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.blf .cl-releases {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.blf .cl-releases a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+.blf .cl-releases a:hover {
+  border-color: rgba(18, 152, 74, 0.4);
+  transform: translateY(-1px);
+}
+.blf .cl-rv {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--green);
+  min-width: 62px;
+}
+.blf .cl-rnote {
+  flex: 1;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.blf .cl-releases a svg {
+  width: 16px;
+  height: 16px;
+  color: var(--dim);
+}
+
+/* legal footer variant */
+.blf .legal-footer {
+  padding: 40px 0;
+}
+.blf .legal-footer .fbot {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  align-items: center;
+}
+.blf .legal-foot-links {
+  display: inline-flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.blf .legal-foot-links a {
+  color: #b7bdc7;
+  text-decoration: none;
+  font-weight: 500;
+}
+.blf .legal-foot-links a:hover {
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .blf .cl-highlights {
+    grid-template-columns: 1fr;
+  }
+  .blf .cl-current {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

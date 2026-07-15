@@ -1,14 +1,16 @@
-import { relations } from "drizzle-orm";
-import { index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { user } from "./auth.schema";
 
 /**
- * One perpetual Battlify license per user, minted after a successful Dodo payment.
- * `key` is the signed Ed25519 token the desktop app verifies offline
- * (see battpie: Sources/BattlifyKit/License.swift).
+ * One perpetual Battlify license per user, created after a successful Dodo
+ * payment. The signed key is only minted once the buyer links a Mac: `key` is
+ * null until they enter their device code, and the token embeds that code so
+ * the desktop app rejects it on any other machine
+ * (see battpie: Sources/BattlifyKit/License.swift + DeviceIdentity.swift).
  */
-export const license = pgTable(
+export const license = sqliteTable(
   "license",
   {
     id: text("id").primaryKey(),
@@ -20,11 +22,22 @@ export const license = pgTable(
     name: text("name").notNull(),
     product: text("product").notNull().default("battlify"),
     // The signed license token: base64url(payload) "." base64url(signature).
-    key: text("key").notNull(),
+    // null = purchased but no Mac linked yet. Legacy rows (pre device locking)
+    // hold a key with no deviceCode — those keys work on any Mac.
+    key: text("key"),
+    // Normalized 12-hex device code the key is bound to (e.g. "7F3A92C1D04B").
+    deviceCode: text("device_code"),
+    deviceBoundAt: integer("device_bound_at", { mode: "timestamp_ms" }),
+    // Times the license moved to a different Mac (rebinds are rate-limited).
+    rebindCount: integer("rebind_count").notNull().default(0),
     dodoPaymentId: text("dodo_payment_id"),
     dodoCustomerId: text("dodo_customer_id"),
-    issuedAt: timestamp("issued_at").defaultNow().notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    issuedAt: integer("issued_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
   },
   (table) => [index("license_userId_idx").on(table.userId)],
 );
