@@ -3,3 +3,11 @@
 # TanStack Start generated assets (hash-based filenames)
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Landing-page demo recording and its poster frame. Not hashed, so cache for a
+# week and revalidate rather than forever.
+/battlify-demo.mp4
+  Cache-Control: public, max-age=604800
+
+/battlify-poster.jpg
+  Cache-Control: public, max-age=604800

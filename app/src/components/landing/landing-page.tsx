@@ -1,18 +1,29 @@
-import { Link } from "@tanstack/react-router";
 import {
+  Airpod01Icon,
   BatteryCharging02Icon,
+  BluetoothIcon,
   Cancel02Icon,
+  ChartHistogramIcon,
+  ComputerTerminal01Icon,
   CpuIcon,
   Download04Icon,
   GithubIcon,
+  HistoryIcon,
   Idea01Icon,
   LaptopIcon,
   Moon02Icon,
+  MusicNote01Icon,
   NewTwitterRectangleIcon,
+  PlayCircleIcon,
+  SmartPhone01Icon,
   ThermometerIcon,
   Tick02Icon,
+  Timer01Icon,
+  Wifi01Icon,
 } from "@hugeicons/core-free-icons";
 import type { IconSvgElement } from "@hugeicons/react";
+import { Link } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 
 import { useCheckout } from "#/components/buy-button";
 import { Icon } from "#/components/icon";
@@ -20,8 +31,17 @@ import { BatteryMark, Logo } from "#/components/logo";
 import { ThemeToggle } from "#/components/theme-toggle";
 import { Button } from "#/components/ui/button";
 
-import { FAQS, LINKS, MOMENTS, SPECS, TESTIMONIALS } from "./landing-data";
-import type { MomentArt } from "./landing-data";
+import {
+  ALSO,
+  CAPABILITIES,
+  CHAPTERS,
+  FAQS,
+  LINKS,
+  MOMENTS,
+  SPECS,
+  TESTIMONIALS,
+} from "./landing-data";
+import type { CapabilityIcon, MomentArt } from "./landing-data";
 
 const PRICE = "$2.99";
 
@@ -101,6 +121,9 @@ function Nav() {
           <Logo />
         </Link>
         <nav className="hidden items-center gap-8 justify-self-center text-sm text-muted-foreground sm:flex">
+          <a href="#features" className="transition-colors hover:text-foreground">
+            Features
+          </a>
           <a href="#pricing" className="transition-colors hover:text-foreground">
             Pricing
           </a>
@@ -144,29 +167,40 @@ function Hero() {
       />
       <div className="relative mx-auto max-w-3xl px-6 pt-20 pb-12 text-center">
         <div className="animate-enter">
-          <Eyebrow>Battery care for Mac</Eyebrow>
+          <Eyebrow>Battery care &amp; lid-closed power for Mac</Eyebrow>
         </div>
         <h1
-          className="font-display animate-enter mx-auto mt-5 max-w-2xl text-[2.5rem] leading-[1.03] font-bold tracking-[-0.03em] text-balance sm:text-[3.5rem]"
+          className="animate-enter mx-auto mt-5 max-w-2xl font-display text-[2.5rem] leading-[1.03] font-bold tracking-[-0.03em] text-balance sm:text-[3.5rem]"
           style={{ "--enter-delay": "80ms" } as React.CSSProperties}
         >
-          Your Mac is quietly cooking its own battery.
+          Close the lid. Nothing you care about stops.
         </h1>
         <p
-          className="animate-enter mx-auto mt-6 max-w-lg text-[15px] leading-relaxed text-muted-foreground text-pretty sm:text-base"
+          className="animate-enter mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-pretty text-muted-foreground sm:text-base"
           style={{ "--enter-delay": "160ms" } as React.CSSProperties}
         >
-          Left plugged in, it sits at 100 percent, warm, all day. That is the exact condition that
-          wears a lithium battery out fastest. Battlify holds it at a healthier level, keeps that
-          limit even while your Mac sleeps, and eases off the moment things get hot.
+          A closed MacBook should not quietly drain in your bag, creep back to 100 percent
+          overnight, or steal your AirPods. It also should not kill the build you left running.
+          Battlify holds your battery at a healthy limit, cuts the phantom drain, and keeps your
+          terminal jobs and agents alive with the lid shut, still reachable from your phone.
         </p>
         <div
-          className="animate-enter mt-8 flex justify-center"
+          className="animate-enter mt-8 flex flex-wrap items-center justify-center gap-3"
           style={{ "--enter-delay": "240ms" } as React.CSSProperties}
         >
           <DownloadButton size="lg" className="h-11 rounded-2xl px-6 text-[15px]">
             Download
           </DownloadButton>
+          <Button
+            render={<a href="#demo" aria-label="Watch the Battlify tour" />}
+            nativeButton={false}
+            variant="outline"
+            size="lg"
+            className="h-11 rounded-2xl px-6 text-[15px]"
+          >
+            Watch the tour
+            <Icon icon={PlayCircleIcon} className="size-4" />
+          </Button>
         </div>
         <p
           className="animate-enter mt-4 text-[13px] text-muted-foreground"
@@ -180,9 +214,157 @@ function Hero() {
         className="animate-enter relative mx-auto max-w-3xl px-6 pb-20"
         style={{ "--enter-delay": "420ms" } as React.CSSProperties}
       >
-        <ScreenshotFrame>
-          <WindowMockup variant="charging" />
-        </ScreenshotFrame>
+        <DemoVideo />
+      </div>
+    </section>
+  );
+}
+
+/* ==========================================================================
+   Demo: the real app, recorded. Nothing loads until it is asked for, and the
+   chapters let people jump straight to the part they came for.
+   ========================================================================== */
+
+function formatAt(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function DemoVideo() {
+  const video = useRef<HTMLVideoElement>(null);
+  const [started, setStarted] = useState(false);
+  const [chapter, setChapter] = useState<number | null>(null);
+
+  const play = (at?: number, index?: number) => {
+    const el = video.current;
+    if (!el) return;
+    if (at !== undefined) el.currentTime = at;
+    setChapter(index ?? null);
+    void el.play();
+  };
+
+  return (
+    <div id="demo" className="scroll-mt-20">
+      <ScreenshotFrame>
+        <div className="relative overflow-hidden rounded-[18px] bg-card shadow-window ring-1 ring-black/5 dark:ring-white/10">
+          <video
+            ref={video}
+            className="block w-full"
+            poster="/battlify-poster.jpg"
+            preload="metadata"
+            playsInline
+            muted
+            controls={started}
+            onPlay={() => setStarted(true)}
+            aria-label="Battlify walkthrough: charge limit, lid-closed behaviour, keep-awake, history"
+          >
+            <source src="/battlify-demo.mp4" type="video/mp4" />
+          </video>
+
+          {started ? null : (
+            <button
+              type="button"
+              onClick={() => play()}
+              className="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-black/25 backdrop-blur-[1px] transition-colors hover:bg-black/15"
+              aria-label="Play the Battlify walkthrough"
+            >
+              <span className="flex size-16 items-center justify-center rounded-full bg-white/90 text-black shadow-lg transition-transform group-hover:scale-105">
+                <Icon icon={PlayCircleIcon} className="size-8" />
+              </span>
+              <span className="rounded-full bg-black/55 px-3 py-1 text-[12px] font-medium text-white">
+                Three-minute tour · no sound
+              </span>
+            </button>
+          )}
+        </div>
+      </ScreenshotFrame>
+
+      <div className="mt-5">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {CHAPTERS.map((c, i) => (
+            <button
+              key={c.at}
+              type="button"
+              onClick={() => play(c.at, i)}
+              className={
+                "flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] transition-colors " +
+                (chapter === i
+                  ? "border-primary/40 bg-primary/10 text-primary"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground")
+              }
+            >
+              <span className="font-medium tabular-nums">{formatAt(c.at)}</span>
+              <span>{c.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
+   Capabilities: one card per part of the app, closed-lid story first.
+   ========================================================================== */
+
+const CAPABILITY_ICONS: Record<CapabilityIcon, IconSvgElement> = {
+  lid: LaptopIcon,
+  agents: ComputerTerminal01Icon,
+  remote: SmartPhone01Icon,
+  devices: Airpod01Icon,
+  music: MusicNote01Icon,
+  timer: Timer01Icon,
+  history: HistoryIcon,
+  details: ChartHistogramIcon,
+};
+
+function Capabilities() {
+  return (
+    <section id="features" className="scroll-mt-20 border-t border-border">
+      <div className="mx-auto max-w-3xl px-6 py-24">
+        <div className="reveal max-w-xl">
+          <Eyebrow>What it does</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+            Everything a closed lid should just do.
+          </h2>
+          <p className="mt-5 leading-relaxed text-pretty text-muted-foreground">
+            macOS treats a closed lid as an off switch for the things you want and a free pass for
+            the things you do not. Battlify sorts that out, one section at a time.
+          </p>
+        </div>
+
+        <div className="reveal mt-14 grid gap-x-10 gap-y-11 sm:grid-cols-2">
+          {CAPABILITIES.map((c) => (
+            <div key={c.title}>
+              <div className="flex size-9 items-center justify-center rounded-xl border border-border bg-card text-primary shadow-soft">
+                <Icon icon={CAPABILITY_ICONS[c.icon]} className="size-[18px]" />
+              </div>
+              <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em]">
+                {c.title}
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-pretty text-muted-foreground">
+                {c.body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="reveal mt-14 rounded-2xl border border-border bg-muted/30 px-5 py-5">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+            And the smaller things
+          </p>
+          <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
+            {ALSO.map((item) => (
+              <li
+                key={item}
+                className="rounded-full border border-border bg-card px-2.5 py-1 text-[12px] text-muted-foreground"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
@@ -207,11 +389,12 @@ function ScreenshotFrame({ children }: { children: React.ReactNode }) {
 }
 
 function WindowMockup({ variant }: { variant: "charging" | "sleep" }) {
+  // Mirrors the real tab bar in the app, so the mockups agree with the demo video.
   const sidebar: Array<{ icon: IconSvgElement; label: string; key: string }> = [
     { icon: BatteryCharging02Icon, label: "Charging", key: "charging" },
-    { icon: Moon02Icon, label: "Sleep", key: "sleep" },
-    { icon: ThermometerIcon, label: "Health", key: "health" },
-    { icon: Idea01Icon, label: "MagSafe", key: "magsafe" },
+    { icon: Timer01Icon, label: "Schedule", key: "schedule" },
+    { icon: Moon02Icon, label: "Sleep & Power", key: "sleep" },
+    { icon: CpuIcon, label: "General", key: "general" },
   ];
 
   return (
@@ -256,9 +439,9 @@ function WindowMockup({ variant }: { variant: "charging" | "sleep" }) {
 
 function ChargingPane() {
   const toggles: Array<{ label: string; on: boolean }> = [
-    { label: "Hold at limit while asleep", on: true },
+    { label: "Stop charging before sleep", on: true },
     { label: "Pause charging when hot", on: true },
-    { label: "Drive MagSafe LED", on: false },
+    { label: "Discharge to limit", on: false },
   ];
   return (
     <div className="p-6">
@@ -291,10 +474,10 @@ function ChargingPane() {
 
 function SleepPane() {
   const toggles: Array<{ label: string; on: boolean }> = [
-    { label: "Stop charging before sleep", on: true },
-    { label: "Keep awake on wall power", on: true },
-    { label: "Disable Power Nap", on: false },
-    { label: "Silence Bluetooth on sleep", on: true },
+    { label: "Super Save when lid closed", on: true },
+    { label: "Always Active (keep awake with lid closed)", on: true },
+    { label: "Turn off Bluetooth", on: true },
+    { label: "Restore Wi-Fi & Bluetooth on wake", on: true },
   ];
   return (
     <div className="p-6">
@@ -356,15 +539,15 @@ function Problem() {
       <div className="reveal grid items-center gap-12 sm:grid-cols-[1fr_auto]">
         <div className="max-w-md">
           <Eyebrow tone="muted">The problem</Eyebrow>
-          <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
             A full, warm battery ages fastest.
           </h2>
-          <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
+          <p className="mt-5 leading-relaxed text-pretty text-muted-foreground">
             A lithium battery runs on two clocks at once. A cycle clock, worn by charging and
             discharging. And a calendar clock, chemistry that decays with time alone. A Mac left
             full and warm loses health without finishing a single cycle.
           </p>
-          <p className="mt-4 leading-relaxed text-muted-foreground text-pretty">
+          <p className="mt-4 leading-relaxed text-pretty text-muted-foreground">
             Two things do the real damage: a high charge level and heat. Alone, each is corrosive.
             Together they do not add up, they{" "}
             <span className="font-medium text-foreground">multiply</span>. Pinned at 100 percent
@@ -374,9 +557,50 @@ function Problem() {
         </div>
         <AgingGrid />
       </div>
+
+      <div className="reveal mt-20">
+        <h3 className="max-w-md font-display text-2xl font-bold tracking-[-0.02em] text-balance">
+          And a closed lid that is not really closed.
+        </h3>
+        <p className="mt-4 max-w-md leading-relaxed text-pretty text-muted-foreground">
+          The other half of the problem has nothing to do with chemistry. macOS decides for itself
+          what a shut lid means, and it usually gets it backwards.
+        </p>
+        <div className="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-3">
+          {LID_GRIEFS.map((g) => (
+            <div key={g.title}>
+              <div className="flex size-8 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground">
+                <Icon icon={g.icon} className="size-4" />
+              </div>
+              <p className="mt-3 text-[14px] font-medium text-foreground">{g.title}</p>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-pretty text-muted-foreground">
+                {g.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
+
+const LID_GRIEFS: Array<{ icon: IconSvgElement; title: string; body: string }> = [
+  {
+    icon: BatteryCharging02Icon,
+    title: "Drains in your bag",
+    body: "Wake-for-network, Power Nap and background chatter nibble away for hours. You open it later and lost fifteen percent doing nothing.",
+  },
+  {
+    icon: Airpod01Icon,
+    title: "Grabs your devices",
+    body: "A closed Mac still holds Bluetooth, so your AirPods connect to the laptop in your bag instead of the phone in your hand.",
+  },
+  {
+    icon: ComputerTerminal01Icon,
+    title: "Kills your work",
+    body: "Close the lid and the build stops, the agent stops, the music stops, and SSH goes dark. Sleep is all or nothing.",
+  },
+];
 
 /** Monochrome heatmap: aging intensity across charge level (rows) and heat (cols). */
 function AgingGrid() {
@@ -389,7 +613,7 @@ function AgingGrid() {
         <div className="grid grid-cols-[auto_1fr] gap-x-2">
           {/* Y label */}
           <div className="flex items-center">
-            <span className="text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase [writing-mode:vertical-rl] [transform:rotate(180deg)]">
+            <span className="[transform:rotate(180deg)] text-[10px] font-medium tracking-[0.14em] text-muted-foreground uppercase [writing-mode:vertical-rl]">
               Charge
             </span>
           </div>
@@ -437,16 +661,17 @@ function AgingGrid() {
 
 function Fix() {
   return (
-    <section id="features" className="scroll-mt-20 border-t border-border">
+    <section id="how" className="scroll-mt-20 border-t border-border">
       <div className="mx-auto max-w-3xl px-6 pt-24 pb-8">
         <div className="reveal max-w-xl">
           <Eyebrow>The fix</Eyebrow>
-          <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
-            Battlify does the two hard parts for you.
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+            Battlify does the hard parts for you.
           </h2>
-          <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
-            Staying off 100 percent and staying cool are simple ideas, and a real pain to do by
-            hand. Battlify makes them automatic, then disappears into your menu bar.
+          <p className="mt-5 leading-relaxed text-pretty text-muted-foreground">
+            Staying off 100 percent, staying cool, and knowing what a closed lid is really doing are
+            simple ideas and a real pain to do by hand. Battlify makes them automatic, then
+            disappears into your menu bar.
           </p>
         </div>
 
@@ -479,14 +704,14 @@ function Scene({
           <span className="h-px flex-1 bg-border" />
           <Eyebrow>{moment.eye}</Eyebrow>
         </div>
-        <h3 className="font-display mt-4 text-2xl font-bold tracking-[-0.02em] text-balance">
+        <h3 className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-balance">
           {moment.title}
         </h3>
-        <p className="mt-3 max-w-md leading-relaxed text-muted-foreground text-pretty">
+        <p className="mt-3 max-w-md leading-relaxed text-pretty text-muted-foreground">
           {moment.body}
         </p>
         {"note" in moment && moment.note ? (
-          <p className="mt-4 max-w-md rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-[13px] leading-relaxed text-muted-foreground text-pretty">
+          <p className="mt-4 max-w-md rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-[13px] leading-relaxed text-pretty text-muted-foreground">
             {moment.note}
           </p>
         ) : null}
@@ -513,6 +738,9 @@ function SceneArt({ art }: { art: MomentArt }) {
         {art === "moon" ? <SleepArt /> : null}
         {art === "thermo" ? <HeatArt /> : null}
         {art === "led" ? <LedArt /> : null}
+        {art === "awake" ? <AwakeArt /> : null}
+        {art === "devices" ? <DevicesArt /> : null}
+        {art === "history" ? <HistoryArt /> : null}
       </div>
     </div>
   );
@@ -538,7 +766,7 @@ function LimitArt() {
           <span className="absolute top-1/2 -right-1 size-4 -translate-y-1/2 rounded-full border border-black/10 bg-white shadow-md dark:border-white/20" />
         </div>
       </div>
-      <div className="mt-3 flex justify-between text-[11px] tabular-nums text-muted-foreground">
+      <div className="mt-3 flex justify-between text-[11px] text-muted-foreground tabular-nums">
         <span>50%</span>
         <span className="font-medium text-foreground">limit 80%</span>
         <span>100%</span>
@@ -616,12 +844,9 @@ function HeatArt() {
           Paused · 39&nbsp;°C
         </span>
       </div>
-      <div className="mt-8 relative h-2.5 w-full rounded-full bg-muted shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
+      <div className="relative mt-8 h-2.5 w-full rounded-full bg-muted shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
         {/* fill to current temp, neutral (not a charge-status color) */}
-        <div
-          className="h-full rounded-full bg-foreground/70"
-          style={{ width: `${pos(39)}%` }}
-        />
+        <div className="h-full rounded-full bg-foreground/70" style={{ width: `${pos(39)}%` }} />
         {/* threshold marker */}
         <span
           className="absolute -top-1.5 h-[22px] w-0.5 -translate-x-1/2 rounded-full bg-foreground"
@@ -634,11 +859,11 @@ function HeatArt() {
           35&nbsp;°C
         </span>
       </div>
-      <div className="mt-3 flex justify-between text-[11px] tabular-nums text-muted-foreground">
+      <div className="mt-3 flex justify-between text-[11px] text-muted-foreground tabular-nums">
         <span>20&nbsp;°C</span>
         <span>50&nbsp;°C</span>
       </div>
-      <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground text-pretty">
+      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
         Past your threshold, charging pauses and picks back up once it cools.
       </p>
     </div>
@@ -692,6 +917,140 @@ function LedArt() {
   );
 }
 
+/** The keep-awake process picker: what is running, and what holds the Mac up. */
+function AwakeArt() {
+  const procs = [
+    { name: "claude", detail: "agent session", cpu: "16%", on: true },
+    { name: "npm run build", detail: "vite", cpu: "9%", on: true },
+    { name: "Spotify", detail: "audio", cpu: "2%", on: false },
+  ];
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Icon icon={ComputerTerminal01Icon} className="size-4" />
+          Keep awake for
+        </span>
+        <span className="rounded-full bg-battlify-green/15 px-2.5 py-0.5 text-[11px] font-medium text-battlify-green">
+          Lid closed
+        </span>
+      </div>
+      <div className="mt-4 space-y-2">
+        {procs.map((p) => (
+          <div
+            key={p.name}
+            className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-3.5 py-2.5"
+          >
+            <span
+              aria-hidden
+              className={
+                "size-2 shrink-0 rounded-full " +
+                (p.on ? "bg-battlify-green" : "bg-muted-foreground/30")
+              }
+            />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-mono text-[13px] text-foreground">{p.name}</span>
+              <span className="block text-[11px] text-muted-foreground">{p.detail}</span>
+            </span>
+            <span className="text-[11px] text-muted-foreground tabular-nums">{p.cpu}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
+        Awake while these run, asleep about thirty seconds after the last one exits.
+      </p>
+    </div>
+  );
+}
+
+/** Radios and devices letting go as the lid closes, and coming back on wake. */
+function DevicesArt() {
+  const rows: Array<{ icon: IconSvgElement; label: string; closed: string }> = [
+    { icon: BluetoothIcon, label: "Bluetooth", closed: "Off" },
+    { icon: Wifi01Icon, label: "Wi-Fi", closed: "Off" },
+    { icon: Airpod01Icon, label: "AirPods", closed: "Stay on your phone" },
+  ];
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Icon icon={LaptopIcon} className="size-4" />
+          Lid closed
+        </span>
+        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary">
+          Restores on wake
+        </span>
+      </div>
+      <div className="mt-4 space-y-2">
+        {rows.map((r) => (
+          <div
+            key={r.label}
+            className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-3.5 py-2.5"
+          >
+            <Icon icon={r.icon} className="size-4 shrink-0 text-muted-foreground" />
+            <span className="flex-1 text-[13px] text-foreground">{r.label}</span>
+            <span className="text-[12px] text-muted-foreground">{r.closed}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
+        Open the lid and both radios come straight back, exactly as you had them.
+      </p>
+    </div>
+  );
+}
+
+/** Closed-session ledger, the way Battery History records it. */
+function HistoryArt() {
+  const sessions = [
+    { when: "Closed · Tue 6:39 AM", span: "22h", drop: "no drop", from: "73% → 73%", flat: true },
+    {
+      when: "Closed · Mon 10:04 PM",
+      span: "8h 21m",
+      drop: "no drop",
+      from: "91% → 91%",
+      flat: true,
+    },
+    { when: "On battery · Sun", span: "5h 47m", drop: "−27%", from: "91% → 64%", flat: false },
+  ];
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Icon icon={HistoryIcon} className="size-4" />
+          Battery history
+        </span>
+        <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+          Last 7 days
+        </span>
+      </div>
+      <div className="mt-4 divide-y divide-border/70 overflow-hidden rounded-xl border border-border bg-muted/30">
+        {sessions.map((s) => (
+          <div key={s.when} className="flex items-center gap-3 px-3.5 py-2.5">
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[13px] text-foreground">{s.when}</span>
+              <span className="block text-[11px] text-muted-foreground tabular-nums">
+                {s.from} · {s.span}
+              </span>
+            </span>
+            <span
+              className={
+                "shrink-0 text-[12px] font-medium tabular-nums " +
+                (s.flat ? "text-battlify-green" : "text-muted-foreground")
+              }
+            >
+              {s.drop}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
+        Twenty-two hours shut in a bag, same charge coming out as going in.
+      </p>
+    </div>
+  );
+}
+
 /* ==========================================================================
    Showcase: a second window as proof, plus a compact spec strip.
    ========================================================================== */
@@ -701,7 +1060,7 @@ function Showcase() {
     <section className="border-t border-border">
       <div className="reveal mx-auto max-w-3xl px-6 py-20">
         <div className="mx-auto mb-10 max-w-md text-center">
-          <p className="leading-relaxed text-muted-foreground text-pretty">
+          <p className="leading-relaxed text-pretty text-muted-foreground">
             Everything lives in one small window and a menu bar icon you can read at a glance. No
             Dock clutter, no account, no fuss.
           </p>
@@ -732,7 +1091,7 @@ function Proof() {
       <div className="mx-auto max-w-3xl px-6 py-24">
         <div className="reveal max-w-xl">
           <Eyebrow>Loved by Mac owners</Eyebrow>
-          <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
             People simply stopped worrying about it.
           </h2>
         </div>
@@ -742,7 +1101,7 @@ function Proof() {
               key={t.quote}
               className="mb-4 break-inside-avoid rounded-2xl border border-border bg-card p-5 shadow-soft"
             >
-              <blockquote className="text-[15px] leading-relaxed text-foreground text-pretty">
+              <blockquote className="text-[15px] leading-relaxed text-pretty text-foreground">
                 “{t.quote}”
               </blockquote>
               <figcaption className="mt-3 flex items-center gap-2 text-[13px] text-muted-foreground">
@@ -771,9 +1130,10 @@ function Supported() {
       <h3 className="font-display text-xl font-bold tracking-[-0.02em]">
         Will it run on your Mac?
       </h3>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground text-pretty">
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-pretty text-muted-foreground">
         Battlify is built for modern Apple Silicon MacBooks and supports both of Apple&apos;s
-        charging schemes: the older CH0B/CH0C keys and the newer CHTE on macOS 26 &ldquo;Tahoe.&rdquo;
+        charging schemes: the older CH0B/CH0C keys and the newer CHTE on macOS 26
+        &ldquo;Tahoe.&rdquo;
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {items.map((it) => (
@@ -821,16 +1181,16 @@ function Pricing() {
   return (
     <section className="border-t border-border">
       <div className="mx-auto max-w-3xl px-6 py-24">
-        <div id="pricing" className="reveal scroll-mt-20 max-w-xl">
+        <div id="pricing" className="reveal max-w-xl scroll-mt-20">
           <Eyebrow>The math</Eyebrow>
-          <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
             A new battery is about{" "}
-            <span className="tabular-nums text-muted-foreground line-through decoration-2">
+            <span className="text-muted-foreground tabular-nums line-through decoration-2">
               $199
             </span>
             . Battlify is <span className="tabular-nums">{PRICE}</span>.
           </h2>
-          <p className="mt-5 leading-relaxed text-muted-foreground text-pretty">
+          <p className="mt-5 leading-relaxed text-pretty text-muted-foreground">
             Apple rates a modern MacBook battery for around{" "}
             <span className="font-medium text-foreground tabular-nums">1,000</span> cycles. How you
             treat it in between decides whether it gets there. Battlify is a one-time {PRICE}, free
@@ -873,9 +1233,10 @@ function Pricing() {
               </span>
               <span className="text-sm text-muted-foreground">one-time</span>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
+            <p className="mt-3 text-sm leading-relaxed text-pretty text-muted-foreground">
               Pay once, keep it forever. A replacement battery at the Apple Store runs about{" "}
-              <span className="tabular-nums">$199</span>. This is <span className="tabular-nums">{PRICE}</span>.
+              <span className="tabular-nums">$199</span>. This is{" "}
+              <span className="tabular-nums">{PRICE}</span>.
             </p>
             <p className="mt-4 text-xs font-medium tracking-wide text-muted-foreground uppercase">
               What&apos;s included
@@ -911,7 +1272,7 @@ function Faq() {
       <div className="mx-auto max-w-3xl px-6 py-24">
         <div className="reveal text-center">
           <Eyebrow>FAQ</Eyebrow>
-          <h2 className="font-display mx-auto mt-3 max-w-md text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
+          <h2 className="mx-auto mt-3 max-w-md font-display text-3xl font-bold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.05]">
             Questions, answered.
           </h2>
         </div>
@@ -919,7 +1280,7 @@ function Faq() {
           {FAQS.map((item) => (
             <div key={item.q} className="p-6">
               <dt className="font-medium">{item.q}</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-muted-foreground text-pretty">
+              <dd className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">
                 {item.a}
               </dd>
             </div>
@@ -939,10 +1300,10 @@ function ClosingCta() {
         style={{ background: "radial-gradient(closest-side, var(--color-primary), transparent)" }}
       />
       <div className="reveal relative mx-auto max-w-3xl px-6 py-28 text-center">
-        <h2 className="font-display mx-auto max-w-xl text-3xl font-bold tracking-[-0.03em] text-balance sm:text-[2.75rem] sm:leading-[1.05]">
+        <h2 className="mx-auto max-w-xl font-display text-3xl font-bold tracking-[-0.03em] text-balance sm:text-[2.75rem] sm:leading-[1.05]">
           Give your battery its years back.
         </h2>
-        <p className="mx-auto mt-5 max-w-md leading-relaxed text-muted-foreground text-pretty">
+        <p className="mx-auto mt-5 max-w-md leading-relaxed text-pretty text-muted-foreground">
           Set your limit once and forget it. Battlify keeps the promise in the background, awake or
           asleep, cool or warm.
         </p>
@@ -1064,6 +1425,7 @@ export function LandingPage() {
       <main>
         <Hero />
         <Problem />
+        <Capabilities />
         <Fix />
         <Showcase />
         <Proof />

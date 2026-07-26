@@ -9,9 +9,9 @@ import { env } from "#/env/client";
 export const SITE = {
   name: "Battlify",
   /** Used as the default and as the " | Battlify" suffix on inner pages. */
-  titleDefault: "Battlify: Menu bar battery care for your Mac",
+  titleDefault: "Battlify: Mac battery care, even with the lid closed",
   description:
-    "Battlify is a native menu bar app for Apple Silicon Macs. Set a charge limit that holds, pause charging when the battery runs warm, and keep your limit even while the Mac sleeps.",
+    "Battlify is a native menu bar app for Apple Silicon Macs. Hold a charge limit that sticks, stop the drain when the lid is closed, and keep terminal jobs, agents and music running with the lid shut.",
   locale: "en_US",
   twitter: "@broisnischal",
   /** 1200x630 share image lives in /public. */
