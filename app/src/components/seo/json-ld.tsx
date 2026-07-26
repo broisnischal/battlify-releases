@@ -68,6 +68,24 @@ export function softwareApplicationSchema() {
   };
 }
 
+/** The walkthrough recording on the home page, for the video rich result. */
+export function videoSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "Battlify walkthrough: charge limits, lid-closed power, keep-awake and history",
+    description:
+      "A three-minute tour of Battlify on macOS: setting a charge limit, choosing what happens when the lid closes, keeping terminal jobs and agents awake with the lid shut, and reading battery details and history.",
+    thumbnailUrl: [absoluteUrl("/battlify-poster.jpg")],
+    contentUrl: absoluteUrl("/battlify-demo.mp4"),
+    embedUrl: absoluteUrl("/#demo"),
+    uploadDate: "2026-07-26",
+    duration: "PT2M58S",
+    isFamilyFriendly: true,
+    publisher: { "@id": `${absoluteUrl("/")}#organization` },
+  };
+}
+
 export interface ArticleSchemaInput {
   title: string;
   description: string;

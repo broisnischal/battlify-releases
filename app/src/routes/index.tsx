@@ -8,6 +8,7 @@ import {
   organizationSchema,
   siteNavigationSchema,
   softwareApplicationSchema,
+  videoSchema,
   websiteSchema,
 } from "#/components/seo/json-ld";
 import { seo } from "#/lib/seo";
@@ -22,6 +23,11 @@ export const Route = createFileRoute("/")({
         "battery care macos",
         "apple silicon battery",
         "menu bar battery app",
+        "keep mac awake lid closed",
+        "macbook drains with lid closed",
+        "clamshell mode mac",
+        "ssh into closed macbook",
+        "mac battery history",
       ],
     }),
   }),
@@ -35,6 +41,7 @@ function HomePage() {
       <JsonLd data={websiteSchema()} />
       <JsonLd data={siteNavigationSchema()} />
       <JsonLd data={softwareApplicationSchema()} />
+      <JsonLd data={videoSchema()} />
       <JsonLd data={faqSchema(FAQS.map((f) => ({ question: f.q, answer: f.a })))} />
       <LandingPage />
     </>
