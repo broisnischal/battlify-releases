@@ -77,8 +77,8 @@
   --battlify-glow: oklch(0.55 0.22 256 / 16%); /* soft blue hero glow */
   --battlify-surface: oklch(0.97 0.003 264);
   --battlify-muted: oklch(0.95 0.004 264);
-  --battlify-muted-foreground: oklch(0.5 0.015 264);
-  --battlify-border: oklch(0 0 0 / 8%);
+  --battlify-muted-foreground: oklch(0.44 0.016 264);
+  --battlify-border: oklch(0 0 0 / 11%);
 
   --background: oklch(0.985 0.002 264); /* soft off-white */
   --foreground: oklch(0.21 0.01 264);
@@ -91,11 +91,11 @@
   --secondary: oklch(0.96 0.004 264);
   --secondary-foreground: oklch(0.24 0.01 264);
   --muted: oklch(0.96 0.004 264);
-  --muted-foreground: oklch(0.5 0.015 264);
+  --muted-foreground: oklch(0.44 0.016 264);
   --accent: oklch(0.95 0.015 256); /* subtle blue-tinted hover */
   --accent-foreground: oklch(0.24 0.01 264);
   --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0 0 0 / 9%);
+  --border: oklch(0 0 0 / 11%);
   --input: oklch(0 0 0 / 12%);
   --ring: oklch(0.55 0.22 256);
   --chart-1: oklch(0.55 0.22 256);
@@ -126,8 +126,8 @@
   --battlify-glow: oklch(0.62 0.2 256 / 32%);
   --battlify-surface: oklch(0.205 0.006 264);
   --battlify-muted: oklch(0.27 0.006 264);
-  --battlify-muted-foreground: oklch(0.68 0.012 264);
-  --battlify-border: oklch(1 0 0 / 9%);
+  --battlify-muted-foreground: oklch(0.762 0.012 264);
+  --battlify-border: oklch(1 0 0 / 12%);
 
   --background: oklch(0.115 0.003 264);
   --foreground: oklch(0.97 0.004 264);
@@ -140,11 +140,12 @@
   --secondary: oklch(0.235 0.006 264);
   --secondary-foreground: oklch(0.97 0.004 264);
   --muted: oklch(0.235 0.006 264);
-  --muted-foreground: oklch(0.68 0.012 264);
+  /* L 0.762 keeps the >0.75 gap body copy needs over an L 0.115 ground. */
+  --muted-foreground: oklch(0.762 0.012 264);
   --accent: oklch(0.27 0.02 256);
   --accent-foreground: oklch(0.97 0.004 264);
   --destructive: oklch(0.62 0.21 25);
-  --border: oklch(1 0 0 / 9%);
+  --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.62 0.2 256);
   --chart-1: oklch(0.62 0.2 256);

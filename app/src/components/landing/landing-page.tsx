@@ -1,7 +1,6 @@
 import {
   Airpod01Icon,
   BatteryCharging02Icon,
-  BluetoothIcon,
   Cancel02Icon,
   ChartHistogramIcon,
   ComputerTerminal01Icon,
@@ -9,17 +8,13 @@ import {
   Download04Icon,
   GithubIcon,
   HistoryIcon,
-  Idea01Icon,
   LaptopIcon,
-  Moon02Icon,
   MusicNote01Icon,
   NewTwitterRectangleIcon,
   PlayCircleIcon,
   SmartPhone01Icon,
-  ThermometerIcon,
   Tick02Icon,
   Timer01Icon,
-  Wifi01Icon,
 } from "@hugeicons/core-free-icons";
 import type { IconSvgElement } from "@hugeicons/react";
 import { Link } from "@tanstack/react-router";
@@ -27,7 +22,7 @@ import { useRef, useState } from "react";
 
 import { useCheckout } from "#/components/buy-button";
 import { Icon } from "#/components/icon";
-import { BatteryMark, Logo } from "#/components/logo";
+import { Logo } from "#/components/logo";
 import { ThemeToggle } from "#/components/theme-toggle";
 import { Button } from "#/components/ui/button";
 
@@ -41,7 +36,7 @@ import {
   SPECS,
   TESTIMONIALS,
 } from "./landing-data";
-import type { CapabilityIcon, MomentArt } from "./landing-data";
+import type { CapabilityIcon, Moment } from "./landing-data";
 
 const PRICE = "$2.99";
 
@@ -247,7 +242,7 @@ function DemoVideo() {
   return (
     <div id="demo" className="scroll-mt-20">
       <ScreenshotFrame>
-        <div className="relative overflow-hidden rounded-[18px] bg-card shadow-window ring-1 ring-black/5 dark:ring-white/10">
+        <div className="relative overflow-hidden rounded-[18px] bg-card shadow-window outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
           <video
             ref={video}
             className="block w-full"
@@ -266,7 +261,7 @@ function DemoVideo() {
             <button
               type="button"
               onClick={() => play()}
-              className="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-black/25 backdrop-blur-[1px] transition-colors hover:bg-black/15"
+              className="group absolute inset-0 flex cursor-pointer flex-col items-center justify-center gap-3 bg-black/25 backdrop-blur-[1px] transition-[background-color,scale] hover:bg-black/15 active:scale-[0.96]"
               aria-label="Play the Battlify walkthrough"
             >
               <span className="flex size-16 items-center justify-center rounded-full bg-white/90 text-black shadow-lg transition-transform group-hover:scale-105">
@@ -288,7 +283,7 @@ function DemoVideo() {
               type="button"
               onClick={() => play(c.at, i)}
               className={
-                "flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] transition-colors " +
+                "flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-[12px] transition-[color,border-color,background-color,scale] active:scale-[0.96] " +
                 (chapter === i
                   ? "border-primary/40 bg-primary/10 text-primary"
                   : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground")
@@ -381,149 +376,9 @@ function ScreenshotFrame({ children }: { children: React.ReactNode }) {
           background: "radial-gradient(60% 60% at 50% 0%, var(--color-primary), transparent)",
         }}
       />
-      <div className="relative rounded-[22px] bg-gradient-to-b from-primary/20 via-primary/5 to-transparent p-2 sm:p-2.5 dark:from-primary/30">
+      <div className="relative rounded-[26px] bg-gradient-to-b from-primary/20 via-primary/5 to-transparent p-2 dark:from-primary/30">
         {children}
       </div>
-    </div>
-  );
-}
-
-function WindowMockup({ variant }: { variant: "charging" | "sleep" }) {
-  // Mirrors the real tab bar in the app, so the mockups agree with the demo video.
-  const sidebar: Array<{ icon: IconSvgElement; label: string; key: string }> = [
-    { icon: BatteryCharging02Icon, label: "Charging", key: "charging" },
-    { icon: Timer01Icon, label: "Schedule", key: "schedule" },
-    { icon: Moon02Icon, label: "Sleep & Power", key: "sleep" },
-    { icon: CpuIcon, label: "General", key: "general" },
-  ];
-
-  return (
-    <div className="overflow-hidden rounded-[18px] bg-card shadow-window ring-1 ring-black/5 dark:ring-white/10">
-      {/* Toolbar */}
-      <div className="relative flex items-center gap-2 border-b border-border/60 bg-gradient-to-b from-muted/40 to-transparent px-4 py-3">
-        <span className="flex gap-2">
-          <span className="size-3 rounded-full bg-[#ff5f57] ring-1 ring-black/10 ring-inset" />
-          <span className="size-3 rounded-full bg-[#febc2e] ring-1 ring-black/10 ring-inset" />
-          <span className="size-3 rounded-full bg-[#28c840] ring-1 ring-black/10 ring-inset" />
-        </span>
-        <span className="absolute inset-x-0 flex items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground">
-          <BatteryMark className="size-3.5 text-muted-foreground" />
-          Battlify: Settings
-        </span>
-      </div>
-      <div className="grid sm:grid-cols-[176px_1fr]">
-        <aside className="hidden flex-col gap-0.5 border-r border-border/60 bg-muted/20 p-2.5 sm:flex">
-          {sidebar.map((item) => {
-            const active = item.key === variant;
-            return (
-              <div
-                key={item.key}
-                className={
-                  "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors " +
-                  (active
-                    ? "bg-primary/10 font-medium text-primary"
-                    : "text-muted-foreground hover:bg-muted/50")
-                }
-              >
-                <Icon icon={item.icon} className="size-4" />
-                {item.label}
-              </div>
-            );
-          })}
-        </aside>
-        {variant === "charging" ? <ChargingPane /> : <SleepPane />}
-      </div>
-    </div>
-  );
-}
-
-function ChargingPane() {
-  const toggles: Array<{ label: string; on: boolean }> = [
-    { label: "Stop charging before sleep", on: true },
-    { label: "Pause charging when hot", on: true },
-    { label: "Discharge to limit", on: false },
-  ];
-  return (
-    <div className="p-6">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Charge limit</span>
-        <span className="rounded-full bg-battlify-green/15 px-2.5 py-0.5 text-[11px] font-medium text-battlify-green">
-          Holding
-        </span>
-      </div>
-      <div className="mt-3 flex items-end gap-3">
-        <span className="font-display text-6xl font-semibold tracking-[-0.03em] tabular-nums">
-          80%
-        </span>
-        <span className="mb-2 text-sm text-muted-foreground">buffered · plugged in</span>
-      </div>
-      {/* Charge track with a limit thumb, like a real slider */}
-      <div className="relative mt-5 h-2.5 w-full rounded-full bg-muted shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
-        <div className="relative h-full w-4/5 rounded-full bg-gradient-to-r from-battlify-green/85 to-battlify-green">
-          <span className="absolute top-1/2 -right-1 size-4 -translate-y-1/2 rounded-full border border-black/10 bg-white shadow-md dark:border-white/20" />
-        </div>
-      </div>
-      <div className="mt-6 space-y-2">
-        {toggles.map((t) => (
-          <ToggleRow key={t.label} label={t.label} on={t.on} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SleepPane() {
-  const toggles: Array<{ label: string; on: boolean }> = [
-    { label: "Super Save when lid closed", on: true },
-    { label: "Always Active (keep awake with lid closed)", on: true },
-    { label: "Turn off Bluetooth", on: true },
-    { label: "Restore Wi-Fi & Bluetooth on wake", on: true },
-  ];
-  return (
-    <div className="p-6">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">When the lid closes</span>
-        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-          Enforced
-        </span>
-      </div>
-      <div className="mt-4 flex items-center gap-3">
-        <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-muted text-foreground">
-          <Icon icon={Moon02Icon} className="size-6" />
-        </div>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          Closed means closed: no overnight creep back to 100%, no silent drain.
-        </p>
-      </div>
-      <div className="mt-6 space-y-2">
-        {toggles.map((t) => (
-          <ToggleRow key={t.label} label={t.label} on={t.on} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ToggleRow({ label, on }: { label: string; on: boolean }) {
-  return (
-    <div className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/30 px-3.5 py-2.5">
-      <span className={"text-sm " + (on ? "text-foreground" : "text-muted-foreground")}>
-        {label}
-      </span>
-      <span
-        aria-hidden
-        className={
-          "relative h-[18px] w-[30px] shrink-0 rounded-full transition-colors " +
-          (on ? "bg-primary" : "bg-muted-foreground/25")
-        }
-      >
-        <span
-          className={
-            "absolute top-0.5 left-0.5 size-[14px] rounded-full bg-white shadow-sm transition-transform " +
-            (on ? "translate-x-3" : "translate-x-0")
-          }
-        />
-      </span>
     </div>
   );
 }
@@ -677,7 +532,7 @@ function Fix() {
 
         <div className="mt-16 space-y-20 sm:space-y-28">
           {MOMENTS.map((m, i) => (
-            <Scene key={m.eye} moment={m} index={i} flip={i % 2 === 1} />
+            <Scene key={m.eye} moment={m} index={i} />
           ))}
         </div>
       </div>
@@ -685,18 +540,10 @@ function Fix() {
   );
 }
 
-function Scene({
-  moment,
-  index,
-  flip,
-}: {
-  moment: (typeof MOMENTS)[number];
-  index: number;
-  flip: boolean;
-}) {
+function Scene({ moment, index }: { moment: Moment; index: number }) {
   return (
-    <div className="reveal grid items-center gap-8 sm:grid-cols-2 sm:gap-14">
-      <div className={flip ? "sm:order-2" : ""}>
+    <div className="reveal">
+      <div className="max-w-xl">
         <div className="flex items-center gap-3">
           <span className="font-display text-sm font-semibold text-primary tabular-nums">
             {String(index + 1).padStart(2, "0")}
@@ -707,347 +554,44 @@ function Scene({
         <h3 className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-balance">
           {moment.title}
         </h3>
-        <p className="mt-3 max-w-md leading-relaxed text-pretty text-muted-foreground">
-          {moment.body}
-        </p>
-        {"note" in moment && moment.note ? (
-          <p className="mt-4 max-w-md rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-[13px] leading-relaxed text-pretty text-muted-foreground">
+        <p className="mt-3 leading-relaxed text-pretty text-muted-foreground">{moment.body}</p>
+        {moment.note ? (
+          <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3.5 py-2.5 text-[13px] leading-relaxed text-pretty text-muted-foreground">
             {moment.note}
           </p>
         ) : null}
       </div>
-      <div className={flip ? "sm:order-1" : ""}>
-        <SceneArt art={moment.art} />
+      <div className="mt-8">
+        <Shot shot={moment.shot} />
       </div>
     </div>
   );
 }
 
-function SceneArt({ art }: { art: MomentArt }) {
+/** A real frame from the demo recording, framed like a screenshot. */
+function Shot({ shot }: { shot: Moment["shot"] }) {
   return (
-    <div className="relative rounded-2xl border border-border bg-card p-6 shadow-soft">
+    <figure className={"relative " + (shot.h / shot.w > 1.4 ? "mx-auto max-w-[420px]" : "")}>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-6 -top-6 bottom-0 rounded-[2rem] opacity-20 blur-2xl dark:opacity-30"
+        className="pointer-events-none absolute inset-x-6 -top-6 bottom-0 rounded-[2rem] opacity-25 blur-2xl dark:opacity-40"
         style={{
           background: "radial-gradient(60% 60% at 50% 0%, var(--color-primary), transparent)",
         }}
       />
-      <div className="relative">
-        {art === "bar" ? <LimitArt /> : null}
-        {art === "moon" ? <SleepArt /> : null}
-        {art === "thermo" ? <HeatArt /> : null}
-        {art === "led" ? <LedArt /> : null}
-        {art === "awake" ? <AwakeArt /> : null}
-        {art === "devices" ? <DevicesArt /> : null}
-        {art === "history" ? <HistoryArt /> : null}
-      </div>
-    </div>
-  );
-}
-
-function LimitArt() {
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Charge limit</span>
-        <span className="rounded-full bg-battlify-green/15 px-2.5 py-0.5 text-[11px] font-medium text-battlify-green">
-          Holding
-        </span>
-      </div>
-      <div className="mt-2 flex items-end gap-2">
-        <span className="font-display text-5xl font-semibold tracking-[-0.03em] tabular-nums">
-          80%
-        </span>
-        <span className="mb-1.5 text-sm text-muted-foreground">plugged in</span>
-      </div>
-      <div className="relative mt-5 h-2.5 w-full rounded-full bg-muted shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
-        <div className="relative h-full w-4/5 rounded-full bg-gradient-to-r from-battlify-green/85 to-battlify-green">
-          <span className="absolute top-1/2 -right-1 size-4 -translate-y-1/2 rounded-full border border-black/10 bg-white shadow-md dark:border-white/20" />
-        </div>
-      </div>
-      <div className="mt-3 flex justify-between text-[11px] text-muted-foreground tabular-nums">
-        <span>50%</span>
-        <span className="font-medium text-foreground">limit 80%</span>
-        <span>100%</span>
-      </div>
-    </div>
-  );
-}
-
-function SleepArt() {
-  // Map percentage to SVG y: 0% -> 96, 100% -> 16.
-  const y = (pct: number) => 96 - (pct / 100) * 80;
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={Moon02Icon} className="size-4" />
-          Overnight
-        </span>
-        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-          Enforced
-        </span>
-      </div>
-      <svg
-        viewBox="0 0 240 112"
-        className="mt-4 w-full"
-        role="img"
-        aria-label="Battlify holds at 80 percent overnight while macOS alone creeps to 100 percent"
-      >
-        {/* baseline */}
-        <line x1="16" y1="96" x2="224" y2="96" stroke="var(--border)" strokeWidth="1" />
-        {/* macOS creep to 100% (the problem) */}
-        <path
-          d={`M16 ${y(80)} C 90 ${y(84)}, 150 ${y(98)}, 224 ${y(100)}`}
-          fill="none"
-          stroke="var(--muted-foreground)"
-          strokeWidth="2"
-          strokeDasharray="4 4"
-          opacity="0.6"
+      {/* Concentric: 20px outer radius over 6px of padding leaves 14px inside. */}
+      <div className="relative rounded-[20px] bg-card p-1.5 shadow-window">
+        <img
+          src={shot.src}
+          alt={shot.alt}
+          width={shot.w}
+          height={shot.h}
+          loading="lazy"
+          decoding="async"
+          className="block w-full rounded-[14px] outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
         />
-        {/* Battlify holds flat at 80% */}
-        <path
-          d={`M16 ${y(80)} L 224 ${y(80)}`}
-          fill="none"
-          stroke="var(--battlify-green)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <circle cx="224" cy={y(80)} r="3.5" fill="var(--battlify-green)" />
-      </svg>
-      <div className="mt-3 flex flex-col gap-1.5 text-[12px]">
-        <span className="flex items-center gap-2">
-          <span className="h-0.5 w-4 rounded-full bg-battlify-green" />
-          <span className="text-foreground">Battlify holds 80%</span>
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="h-px w-4 rounded-full bg-muted-foreground/60" />
-          <span className="text-muted-foreground">macOS alone creeps to 100%</span>
-        </span>
       </div>
-    </div>
-  );
-}
-
-function HeatArt() {
-  // 20°C..50°C scale; threshold 35, current 39 (paused).
-  const pos = (t: number) => ((t - 20) / 30) * 100;
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={ThermometerIcon} className="size-4" />
-          Temperature
-        </span>
-        <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground tabular-nums">
-          Paused · 39&nbsp;°C
-        </span>
-      </div>
-      <div className="relative mt-8 h-2.5 w-full rounded-full bg-muted shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
-        {/* fill to current temp, neutral (not a charge-status color) */}
-        <div className="h-full rounded-full bg-foreground/70" style={{ width: `${pos(39)}%` }} />
-        {/* threshold marker */}
-        <span
-          className="absolute -top-1.5 h-[22px] w-0.5 -translate-x-1/2 rounded-full bg-foreground"
-          style={{ left: `${pos(35)}%` }}
-        />
-        <span
-          className="absolute -top-7 -translate-x-1/2 text-[11px] font-medium text-foreground tabular-nums"
-          style={{ left: `${pos(35)}%` }}
-        >
-          35&nbsp;°C
-        </span>
-      </div>
-      <div className="mt-3 flex justify-between text-[11px] text-muted-foreground tabular-nums">
-        <span>20&nbsp;°C</span>
-        <span>50&nbsp;°C</span>
-      </div>
-      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
-        Past your threshold, charging pauses and picks back up once it cools.
-      </p>
-    </div>
-  );
-}
-
-function LedArt() {
-  const tips: Array<{ label: string; state: "charging" | "holding" }> = [
-    { label: "While filling", state: "charging" },
-    { label: "At the limit", state: "holding" },
-  ];
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={Idea01Icon} className="size-4" />
-          MagSafe LED
-        </span>
-      </div>
-      <div className="mt-5 grid grid-cols-2 gap-4">
-        {tips.map((tip) => {
-          const holding = tip.state === "holding";
-          const dot = holding ? "bg-battlify-green" : "bg-battlify-orange";
-          const glow = holding ? "var(--battlify-green)" : "var(--battlify-orange)";
-          return (
-            <div
-              key={tip.state}
-              className="flex flex-col items-center rounded-xl border border-border bg-muted/30 p-4"
-            >
-              {/* cable connector */}
-              <div className="flex h-6 w-12 items-center justify-center rounded-md bg-foreground/85">
-                <span
-                  className={"size-2.5 rounded-full " + dot}
-                  style={{ boxShadow: `0 0 10px 2px ${glow}` }}
-                />
-              </div>
-              <span
-                className={
-                  "mt-3 text-[11px] font-medium " +
-                  (holding ? "text-battlify-green" : "text-battlify-orange")
-                }
-              >
-                {holding ? "Green" : "Amber"}
-              </span>
-              <span className="mt-0.5 text-[12px] text-muted-foreground">{tip.label}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/** The keep-awake process picker: what is running, and what holds the Mac up. */
-function AwakeArt() {
-  const procs = [
-    { name: "claude", detail: "agent session", cpu: "16%", on: true },
-    { name: "npm run build", detail: "vite", cpu: "9%", on: true },
-    { name: "Spotify", detail: "audio", cpu: "2%", on: false },
-  ];
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={ComputerTerminal01Icon} className="size-4" />
-          Keep awake for
-        </span>
-        <span className="rounded-full bg-battlify-green/15 px-2.5 py-0.5 text-[11px] font-medium text-battlify-green">
-          Lid closed
-        </span>
-      </div>
-      <div className="mt-4 space-y-2">
-        {procs.map((p) => (
-          <div
-            key={p.name}
-            className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-3.5 py-2.5"
-          >
-            <span
-              aria-hidden
-              className={
-                "size-2 shrink-0 rounded-full " +
-                (p.on ? "bg-battlify-green" : "bg-muted-foreground/30")
-              }
-            />
-            <span className="min-w-0 flex-1">
-              <span className="block truncate font-mono text-[13px] text-foreground">{p.name}</span>
-              <span className="block text-[11px] text-muted-foreground">{p.detail}</span>
-            </span>
-            <span className="text-[11px] text-muted-foreground tabular-nums">{p.cpu}</span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
-        Awake while these run, asleep about thirty seconds after the last one exits.
-      </p>
-    </div>
-  );
-}
-
-/** Radios and devices letting go as the lid closes, and coming back on wake. */
-function DevicesArt() {
-  const rows: Array<{ icon: IconSvgElement; label: string; closed: string }> = [
-    { icon: BluetoothIcon, label: "Bluetooth", closed: "Off" },
-    { icon: Wifi01Icon, label: "Wi-Fi", closed: "Off" },
-    { icon: Airpod01Icon, label: "AirPods", closed: "Stay on your phone" },
-  ];
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={LaptopIcon} className="size-4" />
-          Lid closed
-        </span>
-        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-          Restores on wake
-        </span>
-      </div>
-      <div className="mt-4 space-y-2">
-        {rows.map((r) => (
-          <div
-            key={r.label}
-            className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-3.5 py-2.5"
-          >
-            <Icon icon={r.icon} className="size-4 shrink-0 text-muted-foreground" />
-            <span className="flex-1 text-[13px] text-foreground">{r.label}</span>
-            <span className="text-[12px] text-muted-foreground">{r.closed}</span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
-        Open the lid and both radios come straight back, exactly as you had them.
-      </p>
-    </div>
-  );
-}
-
-/** Closed-session ledger, the way Battery History records it. */
-function HistoryArt() {
-  const sessions = [
-    { when: "Closed · Tue 6:39 AM", span: "22h", drop: "no drop", from: "73% → 73%", flat: true },
-    {
-      when: "Closed · Mon 10:04 PM",
-      span: "8h 21m",
-      drop: "no drop",
-      from: "91% → 91%",
-      flat: true,
-    },
-    { when: "On battery · Sun", span: "5h 47m", drop: "−27%", from: "91% → 64%", flat: false },
-  ];
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Icon icon={HistoryIcon} className="size-4" />
-          Battery history
-        </span>
-        <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-          Last 7 days
-        </span>
-      </div>
-      <div className="mt-4 divide-y divide-border/70 overflow-hidden rounded-xl border border-border bg-muted/30">
-        {sessions.map((s) => (
-          <div key={s.when} className="flex items-center gap-3 px-3.5 py-2.5">
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13px] text-foreground">{s.when}</span>
-              <span className="block text-[11px] text-muted-foreground tabular-nums">
-                {s.from} · {s.span}
-              </span>
-            </span>
-            <span
-              className={
-                "shrink-0 text-[12px] font-medium tabular-nums " +
-                (s.flat ? "text-battlify-green" : "text-muted-foreground")
-              }
-            >
-              {s.drop}
-            </span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-4 text-[13px] leading-relaxed text-pretty text-muted-foreground">
-        Twenty-two hours shut in a bag, same charge coming out as going in.
-      </p>
-    </div>
+    </figure>
   );
 }
 
@@ -1065,10 +609,7 @@ function Showcase() {
             Dock clutter, no account, no fuss.
           </p>
         </div>
-        <ScreenshotFrame>
-          <WindowMockup variant="sleep" />
-        </ScreenshotFrame>
-        <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+        <dl className="mt-2 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
           {SPECS.map((s) => (
             <div key={s.n}>
               <dt className="font-display text-lg font-semibold tracking-[-0.01em]">{s.n}</dt>
